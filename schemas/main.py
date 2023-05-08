@@ -1,12 +1,13 @@
 from pydantic import BaseModel
+from typing import Optional
 
 class GetNewsParams(BaseModel):
     page: int
 
 class GetNewsReponse(BaseModel):
-    title: str
-    url: str
-    by: str
-    type: str
-    score: int
-    time: int
+    title: Optional[str]
+    url: Optional[str]
+    by: Optional[str]
+    type: Optional[str]
+    score: Optional[int]
+    time: Optional[int]

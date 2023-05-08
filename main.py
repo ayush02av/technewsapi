@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from schemas import main
+from typing import List
 import requests
 import asyncio
 import aiohttp
@@ -39,7 +40,7 @@ async def fetch_all(session, ids):
 
 @app.get(
     "/{page}",
-    response_model=list[main.GetNewsReponse]
+    response_model=List[main.GetNewsReponse]
 )
 async def get_news(page: int):
     try:
