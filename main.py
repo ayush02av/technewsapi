@@ -1,5 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from bs4 import BeautifulSoup
 from schemas import main
 from typing import List
 import requests
@@ -19,7 +20,7 @@ app.add_middleware(
 
 BASE_URL = "https://hacker-news.firebaseio.com/v0/"
 EXTRA = ".json?print=pretty"
-LIMIT_PER_PAGE = 15
+LIMIT_PER_PAGE = 5
 
 def get_url(endpoint):
     return BASE_URL + endpoint + EXTRA
@@ -28,7 +29,16 @@ async def fetch(session, id):
     async with session.get(get_url(f"item/{str(id)}")) as response:
         if response.status != 200:
             response.raise_for_status()
-        return await response.json()
+        json = await response.json()
+
+        soup = BeautifulSoup(requests.get(json['url']).content, "html.parser")
+        json['images'] = [
+            image['src']
+            for image in soup.findAll('img')
+            if 'http' in image['src']
+        ][:3]
+
+        return json
 
 async def fetch_all(session, ids):
     tasks = []

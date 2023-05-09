@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
 
 class GetNewsParams(BaseModel):
     page: int
@@ -11,3 +11,4 @@ class GetNewsReponse(BaseModel):
     type: Optional[str]
     score: Optional[int]
     time: Optional[int]
+    images: Optional[List[str]]
