@@ -56,23 +56,22 @@ async def fetch_all(session, ids):
     response_model=List[main.GetNewsReponse]
 )
 async def get_news(page: int):
-    # try:
-    response = requests.get(get_url('topstories'))
+    try:
+        response = requests.get(get_url('topstories'))
 
-    start = (page - 1) * LIMIT_PER_PAGE
-    
-    news_ids = response.json()[start: start + LIMIT_PER_PAGE]
-
-    async with aiohttp.ClientSession() as session:
-        jsons = await fetch_all(session, news_ids)
-    
-    return jsons
+        start = (page - 1) * LIMIT_PER_PAGE
         
-    # except Exception as exception:
-    raise HTTPException(
-        status_code = 500,
-        detail = exception.__str__()
-    )
+        news_ids = response.json()[start: start + LIMIT_PER_PAGE]
+
+        async with aiohttp.ClientSession() as session:
+            jsons = await fetch_all(session, news_ids)
+        
+        return jsons
+    except Exception as exception:
+        raise HTTPException(
+            status_code = 500,
+            detail = exception.__str__()
+        )
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=80, reload=True)
